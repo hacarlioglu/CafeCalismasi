@@ -6,6 +6,9 @@
     int catNo = Convert.ToInt32(Request.QueryString[0].ToString());
     var list = dm.tblProduct.Where(w => w.IsActive == true && w.CategoryNo == catNo).OrderBy(o => o.Name).ToList();
     int i = 0;
+
+
+
 }
 <style>
     img {
