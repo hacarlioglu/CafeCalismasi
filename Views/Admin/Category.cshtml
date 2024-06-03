@@ -1,0 +1,133 @@
+﻿﻿@using Amsterdam;
+@using Amsterdam.Models;
+@using Amsterdam.Helper;
+@{
+    ViewBag.Title = "Category";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    DataModel dm = new DataModel();
+    var list = dm.tblCategory.OrderBy(o => o.Name).ToList();
+}
+@if (Sessions.Bilgi == null || Sessions.Bilgi.No < 1)
+{
+    <h2>
+        <i class="fa fa-exclamation-triangle" style="color:red;font-size:64pt;"></i>
+        <br />
+        Sayfaya Yetki Yok!!!
+        <a href="/Admin/Login">Giriş Yapınız</a>
+    </h2>
+    return;
+}
+<h1 class="h3 mb-2 text-gray-800">Kategoriler</h1>
+<div class="container-fluid">
+
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Kategoriler</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <button type="button" class="btn btn-warning" onclick="fnEdit(0)">+Ekle</button>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div id="dataTable_filter" class="dataTables_filter">
+                                <label>Ara:<input onkeypress="return enterKeyPressed(event)" id="search" type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></label>
+                                <button type="button" class="btn btn-success" onclick="fnListele()">Listele</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12" id="dvGenel">
+                            @Html.Partial("partial/_ListCategory", new FindObject { Bul = "" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Kategori İşlemler</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="modelBody"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="messModal" tabindex="-1" role="dialog" aria-labelledby="messModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Mesaj</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="messmodelBody"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function fnListele() {
+        $("#dvGenel").load("/Admin/GenelPartial/?Bul=" + $("#search").val().replaceAll(" ", "_") + "+&partial=_ListCategory");
+
+    }
+
+    function fnEdit(No) {
+
+        var title = "Kategori Düzenle";
+        $("#modelBody").load("/Admin/GenelPartial/" + No + "?partial=_EditCategory");
+        $("#logoutModal").modal('show');
+
+    }
+
+    function fnRemove(No) {
+
+        var title = "Kategori Sil";
+        $("#modelBody").load("/Admin/GenelPartial/" + No + "?partial=_RemoveCategory");
+        $("#logoutModal").modal('show');
+
+    }
+
+    function enterKeyPressed(event) {
+        if (event.keyCode == 13) {
+            fnListele();
+        }
+    }
+
+    function fnProduct(No) {
+        window.open("/Admin/Product?No=" + No + "", "_blank")
+    }
+
+    function Sonuc(result) {
+        if (result.Result == true) {
+            $('#logoutModal').modal('hide');
+            fnListele();
+        }
+        else {
+            $("#messmodelBody").load(result.Mess);
+            $("#messModal").modal('show');
+        }
+    }
+
+    function Hata() {
+        $("#messmodelBody").load("<div><br/>Hata...</div>");
+        $("#messModal").modal('show');
+    }
+
+</script>

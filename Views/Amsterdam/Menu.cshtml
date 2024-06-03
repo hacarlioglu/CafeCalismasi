@@ -1,0 +1,11 @@
+﻿﻿@using Amsterdam;
+@using Amsterdam.Models;
+@{
+    ViewBag.Title = "Menu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="dvGenel">
+    @Html.Partial("partial/_MenuCategory", new FindObject { Bul = "" })
+</div>

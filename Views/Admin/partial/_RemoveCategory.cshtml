@@ -1,0 +1,35 @@
+﻿﻿@using Amsterdam;
+@using Amsterdam.Models;
+@model FindObject
+@{
+    DataModel dm = new DataModel();
+    var list = new tblCategory();
+    if (Model.No != 0)
+    {
+        list = dm.tblCategory.Where(w => w.No == Model.No)
+        .FirstOrDefault();
+    }
+}
+@using (Ajax.BeginForm("RemoveCategory", "Admin", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "post",
+    OnSuccess = "Sonuc",
+    OnFailure = "Hata()",
+}, new { enctype = "multipart/form-data" }
+))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.Hidden("No", Model.No)
+
+<div class="modal-body">
+    @list.Name Kategorisini  Silme İşleminden Emin Misiniz?
+    <p>(@list.tblProduct.Count() Adet  Ürününde Kategorisi Silinecektir)</p>
+</div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Kapat</button>
+        <button class="btn btn-danger" type="submit">Sil</button>
+    </div>
+}
+

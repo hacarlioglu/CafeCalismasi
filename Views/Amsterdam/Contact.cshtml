@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<br />
+<br />
+@using (Ajax.BeginForm("SendMail", "Amsterdam", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "post",
+    OnSuccess = "Sonuc",
+    OnFailure = "Hata()",
+}, new { enctype = "multipart/form-data" }
+))
+{
+    @Html.AntiForgeryToken()
+    <div class="container">
+        <div class="row">
+
+            <form action="#" id="form-wrap">
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <label for="name">Konu</label>
+                        <input type="text" class="form-control" id="subject" name="subject">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <label for="name">Adınız</label>
+                        <input type="text" class="form-control" id="name" name="name">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <label for="email">Mail Adresiniz*</label>
+                        <input type="text" class="form-control" id="email" name="email" required>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <label for="message">Mesajınız*</label>
+                        <textarea required id="message" name="message" cols="30" rows="10" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <input type="submit" class="btn btn-success pull-right btn-lg" value="Gönder">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="messModal" tabindex="-1" role="dialog" aria-labelledby="messModalLabel"
+     aria-hidden="true" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" >
+                <h5 class="modal-title" id="exampleModalLabel">Mesaj</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="messmodelBody" style="height:100px" ></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function Sonuc(result) {
+        if (result.Result == true) {
+            $("#subject").val('');
+            $("#name").val('');
+            $("#message").val('');
+            $("#email").val('');
+        }
+        else {
+            $("#messmodelBody").load("<div><br/>Mailiniz Gönderilemedi</div>");
+            $("#messModal").modal('show');
+        }
+    }
+
+    function Hata() {
+        $("#messmodelBody").load("<div><br/>Hata...</div>");
+        $("#messModal").modal('show');
+    }
+
+</script>

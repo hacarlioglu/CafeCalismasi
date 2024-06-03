@@ -1,0 +1,158 @@
+﻿﻿@using Amsterdam;
+@using Amsterdam.Models;
+@using System.Globalization;
+@model FindObject
+@{
+    DataModel dm = new DataModel();
+    var list = new tblProduct();
+
+    var cat = dm.tblCategory.ToList();
+    if (Model.No != 0)
+    {
+        list = dm.tblProduct.Where(w => w.No == Model.No)
+        .FirstOrDefault();
+
+    }
+    CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+}
+@using (Ajax.BeginForm("EditProduct", "Admin", new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "post",
+        OnSuccess = "Sonuc",
+        OnFailure = "Hata()",
+    }, new { enctype = "multipart/form-data" }
+))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.Hidden("No", Model.No)
+
+    <div class="modal-body">
+        <table class="table">
+            <tr>
+                <th>Kategori:</th>
+                <td>
+
+                    <select name="CategoryNo" class="form-control form-control-user">
+                        @foreach (var item in cat)
+                        {
+                            <option @(item.No == list.CategoryNo ? "selected" : "") value="@item.No">@item.Name</option>
+                        }
+                    </select>
+
+                </td>
+            </tr>
+            <tr>
+                <th>Stokkod:</th>
+                <td>
+                    <input type="text" class="form-control form-control-user"
+                           name="Code" value="@(list!=null?list.Code:"")"
+                           placeholder="Stokkod" readonly>
+                </td>
+            </tr>
+            <tr>
+                <th>Ad:</th>
+                <td>
+                    <input type="text" class="form-control form-control-user"
+                           name="Name" value="@(list!=null?list.Name:"")"
+                           placeholder="Stok Adı">
+                </td>
+            </tr>
+            <tr>
+                <th>Açıklama:</th>
+                <td>
+                    <input type="text" class="form-control form-control-user"
+                           name="Name" value="@(list!=null?list.Description:"")"
+                           placeholder="Açıklama">
+                </td>
+            </tr>
+            <tr>
+                <th>KDV Dahil Mi:</th>
+                <td>
+                    <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" id="isVAT" name="IsVAT" checked=@(list!=null&&list.IsVAT == null ?false : list.IsVAT)>
+
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>KDV Oran:</th>
+                <td>
+                    <input type="number" class="form-control form-control-user"
+                           name="VAT" value=@Convert.ToDecimal((list!=null && list.VAT!=null?list.VAT:0),CultureInfo.InvariantCulture)>
+
+
+                </td>
+            </tr>
+            <tr>
+                <th>Satış Fiyatı</th>
+                <td>
+                    <input type="number" class="form-control form-control-user"
+                           name="Price" value=@Convert.ToDecimal((list!=null?list.Price:0),CultureInfo.InvariantCulture) />
+                </td>
+            </tr>
+            <tr>
+                <th>Aktif Mi:</th>
+                <td>
+                    <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" id="customCheck" name="customCheck" checked=@(list!=null&&list.IsActive == null ?false : list.IsActive)>
+
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Resim:</th>
+                <td>
+                    <input type="file" name="Images" id="Image" onchange="loadFile(event)" />
+                    <br /><br />
+                    <img height="100" width="100" id="output" class="img-profile" src=@(list!=null&&list.Image!=null?"data:image/png;base64,"+ Convert.ToBase64String(list.Image, 0, list.Image.Length):"")>
+                </td>
+            </tr>
+            <th colspan="2">
+                <button class="btn btn-danger" onclick="fnImgRemove()">X</button>
+            </th>
+        </table>
+
+
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Kapat</button>
+        <button class="btn btn-success" type="submit">Kaydet</button>
+    </div>
+}
+
+
+<script>
+
+
+    var loadFile = function (event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('output');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
+    function fnImgRemove() {
+        $("#Image").attr("src", "");
+        $("#output").attr("src", "");
+    }
+    $("#customCheck").on('change', function () {
+        if ($(this).is(':checked')) {
+            $(this).attr('value', 'true');
+        } else {
+            $(this).attr('value', 'false');
+        }
+
+    });
+    $("#isVAT").on('change', function () {
+        if ($(this).is(':checked')) {
+            $(this).attr('value', 'true');
+        } else {
+            $(this).attr('value', 'false');
+        }
+
+    });
+</script>

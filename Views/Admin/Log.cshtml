@@ -1,0 +1,82 @@
+﻿﻿@using Amsterdam;
+@using Amsterdam.Models;
+@using Amsterdam.Helper;
+@{
+    ViewBag.Title = "Category";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    DataModel dm = new DataModel();
+    var list = dm.tblCategory.OrderBy(o => o.Name).ToList();
+}
+@if (Sessions.Bilgi == null || Sessions.Bilgi.No < 1)
+{
+    <h2>
+        <i class="fa fa-exclamation-triangle" style="color:red;font-size:64pt;"></i>
+        <br />
+        Sayfaya Yetki Yok!!!
+        <a href="/Admin/Login">Giriş Yapınız</a>
+    </h2>
+    return;
+}
+<h1 class="h3 mb-2 text-gray-800">Loglar</h1>
+<div class="container-fluid">
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Loglar</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <table>
+                                <tr>
+                                    <th>Başlangıç Tarih:</th>
+                                    <td>
+                                        <input type="date" id="startDate" name="trip-start"
+                                               value="@DateTime.Now.AddDays(-8).ToString("yyyy-MM-dd")"
+                                           max="@DateTime.Now.ToString("yyyy-MM-dd")">
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Tarih:</th>
+                                    <td>
+                                        <input type="date" id="finishDate" name="trip-start"
+                                               value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                               max="@DateTime.Now.ToString("yyyy-MM-dd")">
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <label>Ara:<input onkeypress="return enterKeyPressed(event)" id="search" type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></label>
+                                            <button type="button" class="btn btn-success" onclick="fnListele()">Listele</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12" id="dvGenel">
+                            @Html.Partial("partial/_ListLog", new FindObject { Bul = "",Tarih1= DateTime.Now.Date.AddDays(-8).ToString(),Tarih2= DateTime.Now.Date.ToString() })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    function fnListele() {
+        $("#dvGenel").load("/Admin/GenelPartial/?Bul=" + $("#search").val().replaceAll(" ", "_") + "&Tarih1=" + $("#startDate").val() + "&Tarih2=" + $("#finishDate").val()+"&partial=_ListLog");
+
+    }
+
+
+</script>

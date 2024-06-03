@@ -1,0 +1,114 @@
+﻿﻿@using Amsterdam;
+@using Amsterdam.Models;
+@using System.Globalization;
+@model FindObject
+@{
+    DataModel dm = new DataModel();
+    var list = new tblInfo();
+
+    list = dm.tblInfo.FirstOrDefault();
+
+    CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+}
+@using (Ajax.BeginForm("EditInfo", "Admin", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "post",
+    OnSuccess = "Sonuc",
+    OnFailure = "Hata()",
+}, new { enctype = "multipart/form-data" }
+))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.Hidden("No", Model.No)
+
+    <div class="modal-body">
+        <table class="table">
+            <tr>
+                <th>Adres:</th>
+                <td>
+                    <input type="text" class="form-control form-control-user"
+                           name="Adress" value="@(list!=null?list.Adress:"")"
+                           placeholder="Adres">
+                </td>
+            </tr>
+            <tr>
+                <th>Ilce:</th>
+                <td>
+                    <input type="text" class="form-control form-control-user"
+                           name="Ilce" value="@(list!=null?list.Ilce:"")"
+                           placeholder="Ilce">
+                </td>
+            </tr>
+            <tr>
+                <th>City:</th>
+                <td>
+                    <input type="text" class="form-control form-control-user"
+                           name="City" value="@(list!=null?list.Ilce:"")"
+                           placeholder="Şehir">
+                </td>
+            </tr>
+            <tr>
+                <th>Telefon:</th>
+                <td>
+                    <input type="text" class="form-control form-control-user"
+                           name="Phone" value="@(list!=null?list.Phone:"")"
+                           placeholder="Telefon">
+                </td>
+            </tr>
+            <tr>
+                <th>Mail:</th>
+                <td>
+                    <input type="text" class="form-control form-control-user"
+                           name="Mail" value="@(list!=null?list.Mail:"")"
+                           placeholder="Mail">
+                </td>
+            </tr>
+
+
+        </table>
+
+
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Kapat</button>
+        <button class="btn btn-success" type="submit">Kaydet</button>
+    </div>
+}
+
+
+<div class="modal fade" id="messModal" tabindex="-1" role="dialog" aria-labelledby="messModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Mesaj</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="messmodelBody"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+
+    function Sonuc(result) {
+        if (result.Result == true) {
+         
+        }
+        else {
+            $("#messmodelBody").load(result.Mess);
+            $("#messModal").modal('show');
+        }
+    }
+
+    function Hata() {
+        $("#messmodelBody").load("<div><br/>Hata...</div>");
+        $("#messModal").modal('show');
+    }
+
+</script>

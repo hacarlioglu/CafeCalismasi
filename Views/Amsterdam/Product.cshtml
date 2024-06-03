@@ -1,0 +1,116 @@
+﻿﻿@using Amsterdam;
+@using Amsterdam.Models;
+@model FindObject
+@{
+    DataModel dm = new DataModel();
+    int catNo = Convert.ToInt32(Request.QueryString[0].ToString());
+    var list = dm.tblProduct.Where(w => w.IsActive == true && w.CategoryNo == catNo).OrderBy(o => o.Name).ToList();
+    int i = 0;
+}
+<style>
+    img {
+        float: left;
+        width: 100%;
+        height: 200px;
+        background-size: cover;
+    }
+</style>
+
+
+
+<div id="fh5co-featured-menu" class="fh5co-section">
+    <div class="container">
+        <div class="row">
+            <h3 class="subTitle"><em>@list.FirstOrDefault().tblCategory.Name</em></h3>
+        </div>
+
+        @foreach (var item in list)
+        {
+            if (list.Count() > 4)
+            {
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 col-xs-6 col-xxs-12 fh5co-item-wrap">
+                        @if (i % 2 == 0)
+                        {
+                            <div class="fh5co-item animate-box">
+                                @if (item.Image != null)
+                                {<img src=@("data:image/png;base64,"+ Convert.ToBase64String(item.Image, 0, item.Image.Length)) class="img-responsive" alt="@item.No.ToString()">}
+                                <h3 style=" font-size: 27px;">@item.Name</h3>
+                                <span class="fh5co-price" style=" font-size: 25px;">₺@item.Price</span>
+                                <p>@item.Description</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="fh5co-item animate-box">
+                                @if (item.Image != null)
+                                {<img src=@("data:image/png;base64,"+ Convert.ToBase64String(item.Image, 0, item.Image.Length)) class="img-responsive" alt="@item.No.ToString()">}
+                                <h3 style=" font-size: 27px;">@item.Name</h3>
+                                <span class="fh5co-price" style=" font-size: 25px;">₺@item.Price</span>
+                                <p>@item.Description</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            else if (list.Count() > 2 && list.Count() == 4)
+            {
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-6 col-xxs-12 fh5co-item-wrap">
+                        @if (i % 2 == 0)
+                        {
+                            <div class="fh5co-item animate-box">
+                                @if (item.Image != null)
+                                {<img src=@("data:image/png;base64,"+ Convert.ToBase64String(item.Image, 0, item.Image.Length)) class="img-responsive" alt="@item.No.ToString()">}
+                                <h3 style=" font-size: 27px;">@item.Name</h3>
+                                <span class="fh5co-price" style=" font-size: 25px;">₺@item.Price</span>
+                                <p>@item.Description</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="fh5co-item animate-box">
+                                @if (item.Image != null)
+                                {<img src=@("data:image/png;base64,"+ Convert.ToBase64String(item.Image, 0, item.Image.Length)) class="img-responsive" alt="@item.No.ToString()">}
+                                <h3 style=" font-size: 27px;">@item.Name</h3>
+                                <span class="fh5co-price" style=" font-size: 25px;">₺@item.Price</span>
+                                <p>@item.Description</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-md-12 col-sm-6 col-xs-6 col-xxs-12 fh5co-item-wrap">
+                        @if (i % 2 == 0)
+                        {
+                            <div class="fh5co-item animate-box">
+                                @if (item.Image != null)
+                                {<img src=@("data:image/png;base64,"+ Convert.ToBase64String(item.Image, 0, item.Image.Length)) class="img-responsive" alt="@item.No.ToString()">}
+                                <h3 style=" font-size: 27px;">@item.Name</h3>
+                                <span class="fh5co-price" style=" font-size: 25px;">₺@item.Price</span>
+                                <p>@item.Description</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="fh5co-item animate-box">
+                                @if (item.Image != null)
+                                {<img src=@("data:image/png;base64,"+ Convert.ToBase64String(item.Image, 0, item.Image.Length)) class="img-responsive" alt="@item.No.ToString()">}
+                                <h3 style=" font-size: 27px;">@item.Name</h3>
+                                <span class="fh5co-price" style=" font-size: 25px;">₺@item.Price</span>
+                                <p>@item.Description</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            i++;
+        }
+
+    </div>
+</div>
+

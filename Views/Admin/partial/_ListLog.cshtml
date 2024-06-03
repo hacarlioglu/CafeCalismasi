@@ -1,0 +1,51 @@
+﻿﻿@using Amsterdam;
+@using Amsterdam.Models;
+@model FindObject
+@{
+    DateTime start =Convert.ToDateTime(Model.Tarih1);
+    DateTime finish = Convert.ToDateTime(Model.Tarih2).AddDays(1);
+    DataModel dm = new DataModel();
+    string key = Model.Bul == null ? "" : Model.Bul.Replace("_", "").Replace(" ", "").ToUpper();
+
+    var list = dm.tblLog.Where(w => key == "" || w.Description.ToUpper().Replace(" ", "").Contains(key)).
+         Where(w => w.Date >= start && w.Date <= finish)
+         .Select(s => new {
+             s.No, 
+             tableName = (
+             s.TableName == "tblProduct" ? "Stoklar" :
+             (s.TableName == "tblCategory" ? "Kategori" : s.TableName == "tblUser" ? "Kullanıcı" : s.TableName)),
+             user=s.tblUser.Name,
+             tableNo=s.TableNo,
+             s.Description,
+             s.Date
+
+         })
+         .ToList();
+
+}
+
+<table class="table table-bordered dataTable" style="width: 100%;">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Tablo</th>
+            <th>TabloNo</th>
+            <th>Açıklama</th>
+            <th>Kullanıcı</th>
+            <th>Tarih</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in list)
+        {
+        <tr>
+            <th>@item.No</th>
+            <th>@item.tableName</th>
+            <th>@item.tableNo</th>
+            <th>@item.Description</th>
+            <th>@item.user</th>
+            <th>@(item.Date.ToString())</th>
+        </tr>
+        }
+    </tbody>
+</table>

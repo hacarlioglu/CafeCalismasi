@@ -1,0 +1,83 @@
+﻿﻿@using Amsterdam;
+@using Amsterdam.Models;
+@using Amsterdam.Helper;
+@model FindObject
+@{
+    DataModel dm = new DataModel();
+    var list = new tblUser();
+    if (Model.No != 0)
+    {
+        list = dm.tblUser.Where(w => w.No == Model.No)
+        .FirstOrDefault();
+    }
+}
+@using (Ajax.BeginForm("EditUser", "Admin", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "post",
+    OnSuccess = "Sonuc",
+    OnFailure = "Hata()",
+}, new { enctype = "multipart/form-data" }
+))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.Hidden("No", Model.No)
+
+    <div class="modal-body">
+        <table class="table">
+            <tr>
+                <th>Ad:</th>
+                <td>
+                    <input type="text" class="form-control form-control-user"
+                           name="Name" value="@(list!=null && list.Name!=null?list.Name:"")"
+                           placeholder="Kullanıcı">
+                </td>
+            </tr>
+            <tr>
+                <th>Kullanıcı Adı:</th>
+                <td>
+                    <input type="text" class="form-control form-control-user"
+                           name="UserName" value="@(list!=null&&list.UserName!=null?list.UserName:"")"
+                           placeholder="Kullanıcı Adı">
+                </td>
+            </tr>
+            <tr>
+                <th>Şifre :</th>
+                <td>
+                    <input type="password" class="form-control form-control-user"
+                           id="exampleInputPassword"   name="Password"  value="@(list!=null && list.Password!=null?Cryption.Decrypt(list.Password):"")" placeholder="Password">
+                </td>
+            </tr>
+            <tr>
+                <th>Aktif Mi:</th>
+                <td>
+                    <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" id="customCheck" name="customCheck" checked=@(list!=null&&list.IsActive == null ?false : list.IsActive)>
+
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Kapat</button>
+        <button class="btn btn-success" type="submit">Kaydet</button>
+    </div>
+}
+
+
+<script>
+
+
+    $("#customCheck").on('change', function () {
+        if ($(this).is(':checked')) {
+            $(this).attr('value', 'true');
+        } else {
+            $(this).attr('value', 'false');
+        }
+
+    });
+
+
+</script>
